@@ -1,0 +1,692 @@
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+// @import 'sass-bootstrap/lib/bootstrap';
+@import 'bourbon/app/assets/stylesheets/bourbon';
+@import 'foundation/scss/foundation';
+
+@import "icons";
+@import "carousel";
+
+@mixin wrapperWidth() {
+    max-width: 80em;
+}
+
+$borderColor: #e0e0e0;
+$textColor: #555;
+$darkBg: #2C2F36;
+$darkBg: #242B3A;
+$darkBg: #2B323F;
+$green: #18DF97;
+
+$primaryFont: "proxima-nova";
+$secondaryFont: "freight-sans-pro";
+
+$proxima: "proxima-nova";
+
+$sidebarWidth: 250px;
+$headerHeight: 60px;
+$titleOffset: 50px;
+
+@mixin long-shadow($color, $size, $direction) {
+    $ts: null;
+    @for $i from 1 through $size {
+        @if $direction == "top" {
+            $ts: 0 #{$i * -1}px 0 $color, $ts
+        }
+        @else if $direction == "right" {
+             $ts: #{$i}px 0 0 $color, $ts
+        }
+        @else if $direction == "bottom" {
+            $ts: 0 #{$i}px 0 $color, $ts
+        }
+        @else if $direction == "left" {
+            $ts: #{$i * -1}px 0 0 $color, $ts
+        }
+        @else if $direction == "top-left" {
+            $ts: #{$i * -1}px #{$i * -1}px 0 $color, $ts
+        }
+        @else if $direction == "top-right" {
+            $ts: #{$i}px #{$i * -1}px 0 $color, $ts
+        }
+        @else if $direction == "bottom-left" {
+            $ts: #{$i * -1}px #{$i}px 0 $color, $ts
+        }
+        @else if $direction == "bottom-right" {
+            $ts: #{$i}px #{$i}px 0 $color, $ts
+        }
+        @else if $direction == "center" {
+            $ts: 0 0 $color, $ts
+        }
+    }
+    text-shadow: $ts;
+}
+
+@include keyframes(scaleUpDown) {
+    0%   { @include transform( scale(1.0) ); }
+    50%  { @include transform( scale(1.1) ); }
+    100% { @include transform( scale(1.0) ); }
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+.row {
+    max-width: 70em;
+    min-width: 320px;
+}
+
+
+header.sticky {
+
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    max-width: 100%;
+
+    &.top {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: $titleOffset;
+        @include transition(max-width .3s ease-in-out);
+        bottom: inherit;
+    }
+    &.bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: inherit;
+        @include transition(none);
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+}
+
+body {
+    background: #eee;
+    &.show-menu {
+        #sidebar {
+            @include transform( translateX(0) )
+        }
+        #header {
+            left: $sidebarWidth;
+        }
+        #content {
+            margin-left: $sidebarWidth;
+        }
+        header.sticky {
+            left: $sidebarWidth + $titleOffset;
+            &.bottom {
+                left: $titleOffset;
+            }
+        }
+    }
+    #sidebar {
+        //@include transform( translateX(-100%) );
+        // @include transition(all .2s ease-in-out);
+    }
+    #header {
+        left: 0;
+        @include transition(all .3s ease-in-out);
+    }
+    #content {
+        margin-left: $titleOffset;
+        @include transition(margin-left .3s ease-in-out);
+    }
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    width: 50px;
+    .show-menu & { width: $sidebarWidth; }
+    height: 100%;
+    background: $darkBg;
+    position: fixed;
+    overflow: hidden;
+
+    .sg-header {
+        background: tint($darkBg, 4%);
+    }
+
+    .title {
+        padding: 0 1em;
+    }
+
+    h2 {
+        display: none;
+        .show-menu & { display: block; }
+        color: rgba(0,0,0,.6);
+        color: tint($darkBg, 50%);
+        color: #fff;
+        font-family: $proxima;
+        font-size: 1.4em;
+        font-weight: 100;
+        line-height: $headerHeight;
+        margin: 0;
+
+        .semi-bold {
+            font-weight: 700;
+        }
+    }
+
+    .side-nav {
+        margin-bottom: 1em;
+    }
+}
+
+#menu {
+    margin: 0;
+
+    .show-menu & {
+        .text {
+            display: inline !important;
+        }
+        .icon {
+            display: none;
+        }
+        li a {
+            padding: 1em 2em;
+        }
+    }
+
+    .side-nav {
+        font-family: $proxima, 'Open Sans';
+        margin: 0;
+        padding: 0;
+        li {
+            font-size: 1em;
+            margin: 0;
+            color: tint($darkBg, 50%);
+        }
+
+        .text {
+            display: none;
+
+            i {
+                float: right;
+                font-size: 10px;
+                margin-top: 8px;
+                margin-right: 5px;
+                @include transition(all .2s ease-in);
+            }
+        }
+    }
+
+    .icon {
+        display: block;
+        width: 50px;
+        line-height: 65px;
+        text-align: center;
+
+    }
+
+    li {
+        border-top: 1px solid tint($darkBg, 4%);
+        border-bottom: 1px solid shade($darkBg, 40%);
+        @include transition(background .2s ease-in);
+        &:first-child, &:nth-child(2) {
+            border-top: none;
+        }
+        &:last-child {
+            border-bottom: none;
+        }
+        &:after {
+            content: '';
+            opacity: 0;
+            @include transition(opacity 1s ease-in);
+        }
+    }
+
+    li.active {
+        position: relative;
+        background: shade($darkBg, 20%);
+        border-top-color: transparent;
+        &:hover {
+          a { background: shade($darkBg, 20%) !important; }
+        }
+
+        &:after {
+            content: '';
+            top: -1px;
+            bottom: -1px;
+            position: absolute;
+            display: block;
+            border-left: 1px solid $green;
+            opacity: 1;
+        }
+
+        a {
+            color: $green;
+        }
+    }
+
+    a {
+        margin: 0;
+        padding: 0;
+        color: tint($darkBg, 70%);
+        background: transparent;
+        font-family: $proxima;
+        font-weight: 100;
+        @include transition(all .2s ease-in);
+
+        &:hover {
+            background: shade($darkBg,10%);
+            // color: tint($darkBg, 80%);
+            color: #fff;
+
+            .text i {
+                @include transform(translateX(5px) translateZ(0));
+            }
+        }
+    }
+}
+
+#header {
+    position: fixed;
+    top: 0;
+    left: $sidebarWidth;
+    right: 0;
+    z-index: 10;
+    background: #fff;
+    background: rgba(255,255,255,.1);
+    background: transparent;
+    @include perspective(1200px);
+    @include transform-style(preserve-3d);
+    @include transition(all .3s ease-in);
+
+    &.solid {
+        background: #fff;
+        @include box-shadow(0 3px 0 rgba(0,0,0,.05));
+        .menu-icon {
+            @include transition(background .3s ease-in);
+        }
+    }
+
+    .menu-icon {
+        position: absolute;
+        width: 50px;
+        text-align: center;
+        cursor: pointer;
+        padding: 0 1em;
+        z-index: 200;
+        background: $green;
+        overflow: hidden;
+        @include transition(background .2s ease-in-out);
+
+
+        &:hover {
+            background: shade($green, 10%);
+
+            i {
+                color: shade($green, 70%);
+                @include long-shadow(shade($green, 20%), 30, bottom-right);
+            }
+        }
+
+        i {
+            color: #fff;
+            color: shade($green, 60%);
+            font-size: 20px;
+            line-height: $headerHeight;
+            @include transition(all .2s ease-in-out);
+            @include long-shadow(shade($green, 10%), 30, bottom-right);
+        }
+    }
+}
+
+.sg-header {
+    height: $headerHeight;
+
+}
+
+#content {
+    height: 100vh;
+    overflow: scroll;
+    position: relative;
+    margin-left: $sidebarWidth;
+}
+
+#cover {
+    position: relative;
+    background: #ddd;
+    height: 100vh;
+    min-height: 600px;
+    background-size: cover;
+    background-position:center;
+
+    .title-area {
+        position: absolute;
+        width: 100%;
+        top: 48%;
+        @include transform( translateY(-50%) );
+        text-align: center;
+        color: #fff;
+
+        img {
+            width: 180px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            display: inline-block;
+            margin: 0 auto;
+            background: $green;
+            color: #fff;
+            font-size: 6em;
+            padding: 2% 3%;
+            font-family: $proxima, 'Open Sans';
+            font-weight: 100;
+            line-height: 1;
+            border-radius: 6px;
+        }
+
+        span {
+            display: inline-block;
+            padding: .8em 1em;
+            margin-top: 20px;
+            font-size: 1.4em;
+            font-family: $proxima, 'Open Sans';
+            font-weight: 100;
+            background: $darkBg;
+            border-radius: 6px;
+
+            img {
+                vertical-align: baseline;
+                margin: 0 0 0 2px;
+                width: 4.4em;
+            }
+        }
+    }
+}
+
+
+.section {
+
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 5em;
+
+    & > .row {
+        margin-bottom: 4em;
+    }
+
+    //alertnate background colors
+    &:nth-child(even) { background: #f7f7f7; }
+    &:nth-child(odd) { background: #E8EAED; }
+
+    & > header {
+
+        &.row { margin-bottom: 0; }
+        // overflow: hidden;
+        @include transition(max-width .3s ease-in-out, left .3s ease-in-out);
+
+        h2 {
+            color: $darkBg;
+            font-size: 3.6em;
+            margin-top: 1.6em;
+            margin-bottom: 1em;
+            font-family: $proxima;
+            font-weight: 600;
+            z-index: 11;
+            // @include transition(font-size .2s ease-in-out);
+        }
+
+        .num {
+            color: $green;
+            // font-weight: 100;
+        }
+
+        &.sticky {
+            z-index: 11;
+
+            h2 {
+                margin: 0;
+                margin-left: -15px;
+                padding: 0 15px;
+                font-size: 1.4em;
+                line-height: $headerHeight;
+                @include transition(all .5s ease-in-out);
+            }
+        }
+    }
+
+
+    .description {
+
+        margin-bottom: 1.6em;
+
+        h3 {
+            font-family: $proxima;
+            color: $darkBg;
+            font-weight: 600;
+            font-size: 1.4em;
+        }
+
+        p {
+            margin: 0;
+            color: $textColor;
+            color: $darkBg;
+            font-family: $proxima, 'Open Sans';
+            font-weight: 300;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+    }
+
+    .sample {
+
+        label {
+            cursor: default;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: "proxima-nova";
+            font-size: .8em;
+            font-weight: 700;
+            color: #ccc;
+            letter-spacing: .1em;
+        }
+    }
+}
+
+.btn {
+    font-family: $primaryFont;
+}
+
+#logos .sample {
+
+    .logo {
+        position: relative;
+        // top: 0; left: 0;
+        width: 100%;
+        height: 450px;
+        background: #fff;
+
+        .image {
+            // position: absolute;
+            min-width: 100%;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            &.wide {
+                background-size: 50% auto;
+            }
+            &.tall {
+                background-size: auto 50%;
+            }
+        }
+    }
+
+    img {
+        width: 100%;
+    }
+}
+
+#colors .sample {
+
+    ul.color-stripes {
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: block;
+            // margin-right: -100%;
+        }
+        li:first-child .color {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+        li:last-child .color {
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+    }
+
+    .color {
+        position: relative;
+        height: 130px;
+        overflow: hidden;
+
+        &:hover {
+            .meta {
+                opacity: 1;
+                @include transform(translateX(0));
+            }
+        }
+
+        div {
+            width: 100%;
+            height: 100%;
+        }
+
+        .meta {
+            position: absolute;
+            top: 1.6em;
+            left: 1.6em;
+            font-family: $proxima;
+            line-height: 1.4;
+            color: #fff;
+            opacity: 0;
+            // opacity: 1;
+            @include transform(translateX(10%));
+            @include transition(all .3s ease-out);
+
+            &.dark  { color: #222; color: rgba(0,0,0,.75); }
+            &.light { color: #fff; color: rgba(255,255,255,.75); }
+        }
+
+        .name {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        dt, dd {
+            font-size: .8em;
+            display: inline;
+        }
+
+    }
+}
+
+#typography .sample {
+
+    p.font-name {
+        font-size: 3em;
+        // margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 2.2em;
+        word-wrap: break-word;
+        line-height: 1.2;
+        margin-bottom: 1em;
+    }
+
+    .glyph {
+
+        text-align: center;
+
+
+        border-top: 1px solid $borderColor;
+        border-left: 1px solid $borderColor;
+
+        li {
+            padding: .5em;
+            border-right: 1px solid $borderColor;
+            border-bottom: 1px solid $borderColor;
+        }
+
+        i {
+            font-size: 2em;
+            display: block;
+        }
+    }
+
+    .primary {
+        font-family: $primaryFont;
+        &.thin        { font-weight: 100; }
+        &.bold        { font-weight: 700; }
+    }
+
+    .secondary {
+        font-family: $secondaryFont;
+        &.thin        {  }
+        &.thin-italic {  }
+        &.regular     { font-weight: 400; }
+        &.italic      { font-weight: 400; font-style: italic; }
+        &.bold        { font-weight: 700; }
+        &.bold-italic { font-weight: 700; font-style: italic; }
+    }
+}
+
+#text-elements .sample {
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: $primaryFont;
+        font-weight: 700;
+        line-height: 1.2;
+
+        &.subheader {
+            font-weight: 100;
+        }
+    }
+
+    h1 {  }
+    h2 {  }
+    h3 {  }
+    h4 {  }
+    h5 {  }
+    h6 {  }
+
+    p { font-family: $secondaryFont; }
+
+    p.lead {
+        font-size: 1.8rem;
+        line-height: 1.4em;
+        max-width: 36em;
+    }
+
+    p.standard {
+        font-size: 1.2rem;
+        max-width: 36em;
+    }
+
+    p.small {
+        font-size: .8rem;
+        max-width: 36rem;
+    }
+
+    ul {  }
+    ol {  }
+
+}
+
+
+
